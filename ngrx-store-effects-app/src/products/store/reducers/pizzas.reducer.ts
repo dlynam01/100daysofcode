@@ -71,3 +71,7 @@ export function reducer(
   }
   return state;
 }
+
+export const arePizzasLoading = (state: PizzaState) => state.loading;
+export const arePizzasLoaded = (state: PizzaState) => state.loaded;
+export const pizzas = (state: PizzaState) => state.data;
