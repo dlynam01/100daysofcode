@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { Pizza } from "../../models/pizza.model";
 import { Store } from "@ngrx/store";
-import {Observable} from 'rxjs/Observable';
-import * as fromStore from '../../store';
+import { Observable } from "rxjs/Observable";
+import { tap } from "rxjs/operators";
+import * as fromStore from "../../store";
 import { Topping } from "../../models/topping.model";
 
 @Component({
@@ -13,13 +14,13 @@ import { Topping } from "../../models/topping.model";
       class="product-item">
       <pizza-form
         [pizza]="pizza$ | async"
-        [toppings]="toppings"
+        [toppings]="toppings$ | async"
         (selected)="onSelect($event)"
         (create)="onCreate($event)"
         (update)="onUpdate($event)"
         (remove)="onRemove($event)">
         <pizza-display
-          [pizza]="visualise">
+          [pizza]="visualise$ | async">
         </pizza-display>
       </pizza-form>
     </div>
@@ -27,16 +28,28 @@ import { Topping } from "../../models/topping.model";
 })
 export class ProductItemComponent implements OnInit {
   pizza$: Observable<Pizza>;
-  visualise: Pizza;
-  toppings: Topping[];
+  visualise$: Observable<Pizza>;
+  toppings$: Observable<Topping[]>;
 
   constructor(private store: Store<fromStore.ProductsState>) {}
 
   ngOnInit() {
-    this.pizza$ = this.store.select(fromStore.selectedPizzaLens);
+    this.pizza$ = this.store.select(fromStore.selectedPizzaLens).pipe(
+      tap((pizza: Pizza) => {
+        const pizzaExists = !!(pizza && pizza.toppings);
+        const toppings = pizzaExists
+          ? pizza.toppings.map(topping => topping.id)
+          : [];
+        this.store.dispatch(new fromStore.VisualiseToppings(toppings));
+      })
+    );
+    this.toppings$ = this.store.select(fromStore.allToppingsLens);
+    this.visualise$ = this.store.select(fromStore.pizzaVisualiseLens);
   }
 
-  onSelect(event: number[]) {}
+  onSelect(event: number[]) {
+    this.store.dispatch(new fromStore.VisualiseToppings(event));
+  }
 
   onCreate(event: Pizza) {}
 
