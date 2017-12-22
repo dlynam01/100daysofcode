@@ -26,13 +26,13 @@ export const ROUTES: Routes = [
     component: fromContainers.ProductsComponent
   },
   {
-    path: ":id",
-    canActivate: [fromGuards.PizzaExistsGuard, fromGuards.ToppingsGuard],
+    path: "new",
+    canActivate: [fromGuards.PizzaGuard, fromGuards.ToppingsGuard],
     component: fromContainers.ProductItemComponent
   },
   {
-    path: "new",
-    canActivate: [fromGuards.PizzaGuard, fromGuards.ToppingsGuard],
+    path: ":id",
+    canActivate: [fromGuards.PizzaExistsGuard, fromGuards.ToppingsGuard],
     component: fromContainers.ProductItemComponent
   }
 ];
