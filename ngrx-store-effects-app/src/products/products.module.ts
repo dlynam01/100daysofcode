@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 import { StoreModule } from "@ngrx/store";
 import { reducers, effects } from "./store";
-import { EffectsModule } from '@ngrx/effects';
+import { EffectsModule } from "@ngrx/effects";
 
 // components
 import * as fromComponents from "./components";
@@ -16,18 +16,23 @@ import * as fromContainers from "./containers";
 // services
 import * as fromServices from "./services";
 
+import * as fromGuards from "./guards";
+
 // routes
 export const ROUTES: Routes = [
   {
     path: "",
+    canActivate: [fromGuards.PizzaGuard],
     component: fromContainers.ProductsComponent
   },
   {
     path: ":id",
+    canActivate: [fromGuards.PizzaExistsGuard, fromGuards.ToppingsGuard],
     component: fromContainers.ProductItemComponent
   },
   {
     path: "new",
+    canActivate: [fromGuards.PizzaGuard, fromGuards.ToppingsGuard],
     component: fromContainers.ProductItemComponent
   }
 ];
@@ -41,7 +46,7 @@ export const ROUTES: Routes = [
     StoreModule.forFeature("products", reducers),
     EffectsModule.forFeature(effects)
   ],
-  providers: [...fromServices.services],
+  providers: [...fromServices.services, ...fromGuards.guards],
   declarations: [...fromContainers.containers, ...fromComponents.components],
   exports: [...fromContainers.containers, ...fromComponents.components]
 })
