@@ -1,5 +1,6 @@
 import * as fromActions from "../actions";
 import * as fromModels from "../../models";
+import { createFeatureSelector } from "@ngrx/store";
 
 export interface RecipeSearchState {
   searchString: string;
@@ -45,3 +46,5 @@ export function reducer(
     }
   }
 }
+
+export const RECIPE_SEARCH_VIEW = createFeatureSelector("recipe-search");

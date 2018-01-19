@@ -4,6 +4,8 @@ import * as fromActions from "../actions";
 import { SearchRecipeService } from "../../services";
 import { switchMap, map, catchError } from "rxjs/operators";
 import { of } from "rxjs/observable/of";
+import * as fromModels from "../../models";
+import { mergeMap } from "rxjs/operators/mergeMap";
 
 @Injectable()
 export class SearchRecipeEffects {
@@ -13,7 +15,7 @@ export class SearchRecipeEffects {
   ) {}
 
   @Effect()
-  loadReipies$ = this.actions$
+  loadRecipies$ = this.actions$
     .ofType(fromActions.RECIPE_SEARCH)
     .pipe(
       map((action: fromActions.RecipeSearch) => action.payload),
@@ -21,7 +23,10 @@ export class SearchRecipeEffects {
         this.searchReipeService
           .searchRecipe(a)
           .pipe(
-            map(b => new fromActions.RecipeSearchSuccess(b)),
+            map(
+              (result: fromModels.SearchResult) =>
+                new fromActions.RecipeSearchSuccess(result)
+            ),
             catchError(err => of(new fromActions.RecipeSearchFailure(err)))
           )
       )

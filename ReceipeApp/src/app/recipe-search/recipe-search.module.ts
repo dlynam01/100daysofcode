@@ -3,20 +3,19 @@ import { CommonModule } from "@angular/common";
 import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import * as fromStore from "./store";
-import * as fromComponents from "./components";
-import { SearchForm } from "./components";
+import { components } from "./components";
 import { SearchRecipeService } from "./services";
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule,
+    HttpClientModule,
     StoreModule.forFeature("recipe-search", fromStore.reducer),
     EffectsModule.forFeature(fromStore.effects)
   ],
-  declarations: [SearchForm],
+  declarations: [...components],
   providers: [SearchRecipeService],
-  exports: [SearchForm]
+  exports: [...components]
 })
 export class RecipeSearchModule {}

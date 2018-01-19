@@ -1,4 +1,5 @@
 import { Action } from "@ngrx/store";
+import { SearchResult } from "../../models";
 
 export const RECIPE_SEARCH = "[Recipe Search] Search";
 export const RECIPES_SEARCH_SUCCESS = "[Recipe Search] Success";
@@ -11,7 +12,7 @@ export class RecipeSearch implements Action {
 
 export class RecipeSearchSuccess implements Action {
   type = RECIPES_SEARCH_SUCCESS;
-  constructor(public payload: any) {}
+  constructor(public payload: SearchResult) {}
 }
 
 export class RecipeSearchFailure implements Action {
