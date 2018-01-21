@@ -35,13 +35,13 @@ export function reducer(
       return {
         ...state,
         results: initialState.results,
-        searchString: action.payload,
+        searchString: (<fromActions.RecipeSearch>action).payload,
         isLoading: true,
         loaded: false
       };
     }
     case fromActions.RECIPES_SEARCH_SUCCESS: {
-      const payload: fromModels.SearchResult = action.payload;
+      const payload: fromModels.SearchResult = (<fromActions.RecipeSearchSuccess>action).payload;
       const from = payload.from;
       const isLastPage = payload.to >= payload.count;
       const selectedPagination = isLastPage
@@ -57,7 +57,7 @@ export function reducer(
 
       return {
         ...state,
-        results: action.payload,
+        results: payload,
         selectedPagination,
         paginationOptions,
         isLoading: false,
@@ -71,6 +71,14 @@ export function reducer(
         isLoading: false,
         loaded: false
       };
+    }
+    case fromActions.RECIPE_SEARCH_PAGANATION: {
+      return {
+        ...state,
+        isLoading: true,
+        loaded: false,
+        results: initialState.results
+      }
     }
     default: {
       return state;

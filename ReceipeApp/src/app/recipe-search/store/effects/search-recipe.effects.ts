@@ -31,4 +31,21 @@ export class SearchRecipeEffects {
           )
       )
     );
+
+  @Effect()
+  paginate$ = this.actions$
+    .ofType(fromActions.RECIPE_SEARCH_PAGANATION)
+    .pipe(
+      switchMap((a: fromActions.RecipeSearchPagination) =>
+        this.searchReipeService
+          .paginate(a.pageNumber, a.searchString)
+          .pipe(
+            map(
+              (result: fromModels.SearchResult) =>
+                new fromActions.RecipeSearchSuccess(result)
+            ),
+            catchError(err => of(new fromActions.RecipeSearchFailure(err)))
+          )
+      )
+    );
 }

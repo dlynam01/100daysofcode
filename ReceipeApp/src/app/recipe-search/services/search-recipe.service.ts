@@ -14,8 +14,18 @@ export class SearchRecipeService {
         "https://api.edamam.com/search?app_id=ab40f237&app_key=6144a5bc9465b7e0b0a408dd6d8b982c&q=" +
           searchString
       )
-      .pipe(
-        catchError((error: any) => Observable.throw(error.json()))
-      );
+      .pipe(catchError((error: any) => Observable.throw(error.json())));
+  }
+
+  paginate(
+    pageNumber: number,
+    searchString: string
+  ): Observable<fromModels.SearchResult> {
+    return this.httpService
+      .get<fromModels.SearchResult>(
+        `https://api.edamam.com/search?app_id=ab40f237&app_key=6144a5bc9465b7e0b0a408dd6d8b982c&q=${searchString}&from=${ (pageNumber - 1) *
+          10}`
+      )
+      .pipe(catchError((error: any) => Observable.throw(error.json())));
   }
 }

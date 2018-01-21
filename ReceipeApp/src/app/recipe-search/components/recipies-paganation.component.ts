@@ -2,7 +2,8 @@ import { Component } from "@angular/core";
 import { Store } from "@ngrx/store";
 import * as fromStore from "../store";
 import * as fromViews from "../store/views";
-import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
+import * as fromActions from "../store/actions"
+import { OnInit } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
 @Component({
@@ -10,6 +11,8 @@ import { Observable } from "rxjs/Observable";
   styles: [
     `
     .container {
+        margin-top: 20px;
+        margin-botton: 20px;
         color: rebeccapurple; 
         display: flex;
         align-items: center;
@@ -45,12 +48,11 @@ import { Observable } from "rxjs/Observable";
                 <div>Number of hits: {{(count$ | async)}}</div>
             </div>
             <div class="container">
-                <a [ngClass]="{'active' : false }" *ngFor="let number of (paginationNumbers$ | async)">{{number}}</a>
+                <div *ngFor="let number of (paginationNumbers$ | async)">
+                    <a (click)=page(number) [ngClass]="{'active' : (selectedPageNumber$ | async) === number }" >{{number}}</a>
+                </div>
             </div>
-        </div>
-        
-
-        
+        </div>        
     `
 })
 export class RecipiesPaginationComponent implements OnInit {
@@ -71,5 +73,10 @@ export class RecipiesPaginationComponent implements OnInit {
       fromViews.PAGINATION_SELECTION_VIEW
     );
     this.isLoaded$ = this.store.select(fromViews.LOADED_VIEW);
+  }
+
+  page(number: number) {
+      console.log('test');
+      this.store.dispatch(new fromActions.RecipeSearchPagination(number, "chicken"))
   }
 }
